@@ -1,0 +1,62 @@
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<style type="text/css">
+.success{
+	border: 2px solid #009400;
+	background: #B3FFB3;
+	color: #555;
+	font-weight: bold;
+}
+.error{
+	border: 2px solid #DE001A;
+	background: #FFA8B3;
+	color: #000;
+	font-weight: bold;
+}
+</style>
+</head>
+<body>
+<script>
+    $(document).ready(function(){  
+        $("#searchForm").submit(function(){  
+			 $("#formResponse").removeClass('error');  
+             $("#formResponse").removeClass('success');  
+      		 $("#formResponse").html("");
+            $.ajax({  
+                type: "POST",  
+                url: "api/search",  
+                data: $("#searchForm").serialize(),  
+                dataType: "jsonp",
+      
+                success: function(msg){  
+                	if (msg.res == "ok"){
+					 $("#formResponse").removeClass('error');  
+  		             $("#formResponse").addClass('success');  
+                	 $("#formResponse").html(msg.res);
+                	 }
+                	 else{
+	                	 $("#formResponse").removeClass('success');  
+	                	$("#formResponse").addClass('error');  
+	                	$("#formResponse").html(msg.msg); 
+                	 }  
+                },  
+                error: function(){
+                	 $("#formResponse").removeClass('success');  
+                	$("#formResponse").addClass('error');  
+                	$("#formResponse").html("There was an error submitting the form. Please try again."); 
+                }  
+            });  
+            //make sure the form doesn't post  
+            return false;  
+        });  
+    });  
+</script>
+<form id="searchForm" method="post">
+ElasticSearch IP: <input type="text" name="ip" style="height: 23px; ">		
+<br/><br/>
+<textarea name="sql" style="height: 78px; width: 616px; "></textarea>    <input type="submit" value="Search" style="width: 102px; ">
+	</form>
+<div id="formResponse"></div>
+</body>
+</html>
